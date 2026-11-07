@@ -19,12 +19,13 @@ let tasks = [
     }
 ];
 
-const formInput = document.getElementById('taskForm');
+
+const formSubmit = document.getElementById('taskForm');
 const taskTitle = document.getElementById('title');
 const taskDescription = document.getElementById('description');
 const taskSubmit = document.getElementById('submitBtn');
 const tasksContainer = document.getElementById('tasksContainer');
-
+displayTasks()
 
 function displayTasks() {
     tasksContainer.innerHTML = "";
@@ -39,4 +40,18 @@ function displayTasks() {
     })
 }
 
-displayTasks()
+formSubmit.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const title = taskTitle.value;
+    const description = taskDescription.value;
+    const newTask = {
+        id: Date.now(),
+        title: title,
+        description: description,
+        completed: false
+    }
+    tasks.push(newTask)
+    taskTitle.value = "";
+    taskDescription.value = "";
+    displayTasks()
+})
