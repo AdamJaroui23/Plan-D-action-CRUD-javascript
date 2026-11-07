@@ -18,3 +18,9 @@ let tasks = [
     completed: false
   }
 ];
+
+const formInput = document.getElementById('taskForm');
+const taskTitle = document.getElementById('title');
+const taskDescription = document.getElementById('description');
+const taskSubmit = document.getElementById('submitBtn');
+const tasksContainer = document.getElementById('tasksContainer');
