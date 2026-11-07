@@ -1,23 +1,4 @@
-let tasks = [
-    {
-        id: 1,
-        title: "Apprendre JavaScript",
-        description: "Réviser les tableaux et les objets",
-        completed: false
-    },
-    {
-        id: 2,
-        title: "Créer une page HTML",
-        description: "Utiliser les éléments HTML5",
-        completed: true
-    },
-    {
-        id: 3,
-        title: "Manipuler le DOM",
-        description: "Créer et supprimer des éléments",
-        completed: false
-    }
-];
+let tasks = [];
 
 
 const formSubmit = document.getElementById('taskForm');
@@ -34,8 +15,8 @@ function displayTasks() {
         div.innerHTML = `<h3>${task.title}</h3> <p>${task.description}</p> <p>${task.completed ? "Terminée" : "En cours"}</p>`
         tasksContainer.appendChild(div);
         div.innerHTML += `
-        <button>Modifier</button>
-        <button>Supprimer</button>
+        <button id="editBtn">Modifier</button>
+        <button class="deleteBtn" data-id="${task.id}">Supprimer</button>
         `;
     })
 }
@@ -55,3 +36,13 @@ formSubmit.addEventListener("submit", (event) => {
     taskDescription.value = "";
     displayTasks()
 })
+
+
+tasksContainer.addEventListener("click", (event) => {
+    const deleteBtn = event.target.closest(".deleteBtn");
+    if (!deleteBtn) return;
+
+    const id = Number(deleteBtn.dataset.id);
+    tasks = tasks.filter(task => task.id !== id);
+    displayTasks();
+});
