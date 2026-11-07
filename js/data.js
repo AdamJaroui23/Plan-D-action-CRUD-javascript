@@ -1,11 +1,13 @@
 let tasks = [];
-let editingTaskId = null;
 
 const formSubmit = document.getElementById('taskForm');
 const taskTitle = document.getElementById('title');
 const taskDescription = document.getElementById('description');
 const taskSubmit = document.getElementById('submitBtn');
 const tasksContainer = document.getElementById('tasksContainer');
+
+let editingTaskId = null;
+
 displayTasks()
 
 function displayTasks() {
@@ -21,62 +23,72 @@ function displayTasks() {
     })
 }
 
-formSubmit.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const title = taskTitle.value;
-    const description = taskDescription.value;
+function addTask() {
+    formSubmit.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const title = taskTitle.value;
+        const description = taskDescription.value;
 
-    if (editingTaskId !== null) {
-        const task = tasks.find(task => task.id === editingTaskId);
-        if (task) {
-            task.title = title;
-            task.description = description;
+        if (editingTaskId !== null) {
+            const task = tasks.find(task => task.id === editingTaskId);
+            if (task) {
+                task.title = title;
+                task.description = description;
+            }
+            editingTaskId = null;
+            taskSubmit.textContent = "Ajouter";
+        } else {
+            const newTask = {
+                id: Date.now(),
+                title: title,
+                description: description,
+                completed: false
+            };
+            tasks.push(newTask);
         }
-        editingTaskId = null;
-        taskSubmit.textContent = "Ajouter";
-    } else {
-        const newTask = {
-            id: Date.now(),
-            title: title,
-            description: description,
-            completed: false
-        };
-        tasks.push(newTask);
-    }
 
-    taskTitle.value = "";
-    taskDescription.value = "";
-    displayTasks()
-})
-
-
-tasksContainer.addEventListener("click", (event) => {
-    const deleteBtn = event.target.closest(".deleteBtn");
-    if (!deleteBtn) return;
-
-    const id = Number(deleteBtn.dataset.id);
-    tasks = tasks.filter(task => task.id !== id);
-    if (editingTaskId === id) {
-        editingTaskId = null;
         taskTitle.value = "";
         taskDescription.value = "";
-        taskSubmit.textContent = "Ajouter";
-    }
-    displayTasks();
-});
+        displayTasks()
+    })
+}
 
 
-tasksContainer.addEventListener("click", (event) => {
-    const editBtn = event.target.closest(".editBtn");
-    if (!editBtn) return;
+function deleteTask() {
+    tasksContainer.addEventListener("click", (event) => {
+        const deleteBtn = event.target.closest(".deleteBtn");
+        if (!deleteBtn) return;
 
-    const id = Number(editBtn.dataset.id);
-    const task = tasks.find(task => task.id === id);
-    if (!task) return;
+        const id = Number(deleteBtn.dataset.id);
+        tasks = tasks.filter(task => task.id !== id);
+        if (editingTaskId === id) {
+            editingTaskId = null;
+            taskTitle.value = "";
+            taskDescription.value = "";
+            taskSubmit.textContent = "Ajouter";
+        }
+        displayTasks();
+    });
+}
 
-    editingTaskId = id;
-    taskTitle.value = task.title;
-    taskDescription.value = task.description;
-    taskSubmit.textContent = "Modifier";
 
-})
+function editTask() {
+    tasksContainer.addEventListener("click", (event) => {
+        const editBtn = event.target.closest(".editBtn");
+        if (!editBtn) return;
+
+        const id = Number(editBtn.dataset.id);
+        const task = tasks.find(task => task.id === id);
+        if (!task) return;
+
+        editingTaskId = id;
+        taskTitle.value = task.title;
+        taskDescription.value = task.description;
+        taskSubmit.textContent = "Modifier";
+
+    })
+}
+
+addTask();
+deleteTask();
+editTask();
